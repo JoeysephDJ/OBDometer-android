@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "316792407683",
+    "project_id": "obdometer",
+    "storage_bucket": "obdometer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:316792407683:android:7526d04df1ef34cb88fdb6",
+        "android_client_info": {
+          "package_name": "com.joeyseph.obdometer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "316792407683-9r21cks55uhbcie4s2q2kbs3lbbqie4q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnK2mYFmlNF8Awau8gzDafqm9I2IboRrs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "316792407683-9r21cks55uhbcie4s2q2kbs3lbbqie4q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

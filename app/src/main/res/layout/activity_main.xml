@@ -1,18 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <TextView
+        android:id="@+id/tvLatitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="30sp"
+        android:paddingTop="30sp"
+        android:paddingStart="30sp"
+        android:paddingEnd="20sp"
+        tools:text="Latitude:"
+        />
+    <TextView
+        android:id="@+id/tvLongitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="30sp"
+        android:paddingTop="30sp"
+        android:paddingStart="30sp"
+        android:paddingEnd="20sp"
+        tools:text="Longitude:"
+        />
+    <TextView
+        android:id="@+id/tvState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="30sp"
+        android:paddingTop="30sp"
+        android:paddingStart="30sp"
+        android:paddingEnd="20sp"
+        tools:text="State:"
+        />
+    <TextView
+        android:id="@+id/tvRoad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="30sp"
+        android:paddingTop="30sp"
+        android:paddingStart="30sp"
+        android:paddingEnd="20sp"
+        tools:text="Road:"
+        />
+
+    <Button
+        android:id="@+id/btnStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="25sp"
+        android:text="Start service" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

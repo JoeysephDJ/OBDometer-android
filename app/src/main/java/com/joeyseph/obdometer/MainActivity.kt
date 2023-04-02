@@ -2,6 +2,7 @@ package com.joeyseph.obdometer
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.ActivityManager
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
@@ -58,13 +59,26 @@ class MainActivity : AppCompatActivity() {
         val btnStart: Button = findViewById(R.id.btnStart)
 
         btnStart.setOnClickListener {
+            var stopped = false
             val bgServ: Intent = Intent(this, LocationBackgroundService::class.java)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(bgServ)
-            } else {
-                startService(bgServ)
+            val serviceClassName = "com.joeyseph.obdometer.LocationBackgroundService"
+            val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            val runningServices = activityManager.getRunningServices(Int.MAX_VALUE)
+            for (serviceInfo in runningServices) {
+                if (serviceClassName == serviceInfo.service.className) {
+                    stopService(bgServ)
+                    stopped = true
+                    btnStart.text = "Start Service"
+                }
             }
-
+            if(!stopped) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(bgServ)
+                } else {
+                    startService(bgServ)
+                }
+                btnStart.text = "Stop Service"
+            }
         }
 
         val broadCastReceiver = object : BroadcastReceiver() {
@@ -74,15 +88,18 @@ class MainActivity : AppCompatActivity() {
                 val lat = sharedPref?.getString("latitude", "")
                 val long = sharedPref?.getString("longitude", "")
                 val road = sharedPref?.getString("road", "")
+                val miles = sharedPref?.getFloat("miles", 0f)
                 runOnUiThread(Runnable {
                     val tvState: TextView = findViewById(R.id.tvState)
                     val tvLatitude: TextView = findViewById(R.id.tvLatitude)
                     val tvLongitude: TextView = findViewById(R.id.tvLongitude)
                     val tvRoad: TextView = findViewById(R.id.tvRoad)
-                    tvState.text = state
-                    tvLatitude.text = lat
-                    tvLongitude.text = long
-                    tvRoad.text = road
+                    val tvMiles: TextView = findViewById(R.id.tvMiles)
+                    tvState.text = "State: $state"
+                    tvLatitude.text = "Latitude: $lat"
+                    tvLongitude.text = "Longitude: $long"
+                    tvRoad.text = "Road: $road"
+                    tvMiles.text = "Miles: $miles"
                 })
             }
         }

@@ -52,6 +52,17 @@
         android:paddingEnd="20sp"
         tools:text="Road:"
         />
+    <TextView
+        android:id="@+id/tvMiles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="30sp"
+        android:paddingTop="30sp"
+        android:paddingStart="30sp"
+        android:paddingEnd="20sp"
+        tools:text="Miles:"
+        />
 
     <Button
         android:id="@+id/btnStart"

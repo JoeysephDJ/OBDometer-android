@@ -100,6 +100,7 @@ class LocationBackgroundService : Service() {
                         val editor = sharedPref?.edit()
                         editor?.putFloat("startDistance", miles)
                         editor?.apply()
+                        unregisterReceiver(this)
                     }
                 }
             }
@@ -131,7 +132,7 @@ class LocationBackgroundService : Service() {
         }
         mGpsLocationClient.let {
             Log.d(TAG, "startLocationUpdates: LocationClient is not null")
-            it?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000L, 300f, locationListener)
+            it?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5L, 10f, locationListener)
         }
     }
 
@@ -140,15 +141,19 @@ class LocationBackgroundService : Service() {
             Log.d(TAG, ": $location")
             val ccc = DistanceSinceCCCommand()
             ccc.run(inputStream, outputStream)
+            val mi: Float = ccc.km - sharedPref!!.getFloat("startDistance", 0f)
             val state: String? =
                 geocoder?.getFromLocation(location.latitude, location.longitude, 1)?.get(0)
                     ?.adminArea
-            val road: String? = geocoder?.getFromLocation(location.latitude, location.longitude, 1)?.get(0)
+            var road: String? = geocoder?.getFromLocation(location.latitude, location.longitude, 1)?.get(0)
                 ?.thoroughfare
+            if(road.isNullOrBlank()) {
+                road = geocoder?.getFromLocation(location.latitude, location.longitude, 1)?.get(0)
+                    ?.getAddressLine(0)
+            }
 
             if(sharedPref?.getString("state", "") != state &&
                 sharedPref?.getString("state", "") != "") {
-                val ccc = DistanceSinceCCCommand()
                 ccc.run(inputStream, outputStream)
                 Log.d(TAG, "onReceive: ${ccc.formattedResult}")
                 val km = Integer.parseInt(ccc.formattedResult.replace("km", ""))
@@ -183,12 +188,34 @@ class LocationBackgroundService : Service() {
             editor?.putString("latitude", "${location.latitude}")
             editor?.putString("longitude", "${location.longitude}")
             editor?.putString("road", road)
+            editor?.putFloat("miles", mi)
             editor?.apply()
             val broadcast = Intent(message_received)
             broadcaster.sendBroadcast(broadcast)
         }
 
     override fun onDestroy() {
+        val log = hashMapOf(
+            "uid" to FirebaseAuth.getInstance().currentUser?.uid,
+            "latitude" to sharedPref?.getString("latitude", ""),
+            "longitude" to sharedPref?.getString("longitude", ""),
+            "road" to sharedPref?.getString("road", ""),
+            "oldState" to sharedPref?.getString("state", ""),
+            "newState" to "End Drive",
+            "miles" to sharedPref?.getFloat("miles", 0f),
+            "timestamp" to System.currentTimeMillis()
+        )
+
+        val db = Firebase.firestore
+
+        db.collection("logs")
+            .add(log)
+            .addOnSuccessListener {
+                Log.d(TAG, "Sent data!")
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "Something went wrong...")
+            }
         bluetoothSocket?.close()
         super.onDestroy()
     }
